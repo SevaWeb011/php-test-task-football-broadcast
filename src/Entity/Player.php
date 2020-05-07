@@ -12,7 +12,7 @@ class Player
     private int $inMinute;
     private int $outMinute;
     private int $countGoal = 0;
-    private array $cardsList = [];
+    private array $fallList = [];
 
     public function __construct(int $number, string $name)
     {
@@ -48,9 +48,19 @@ class Player
         return $this->countGoal;
     }
 
+    public function getFallList(): array
+    {
+        return $this->fallList;
+    }
+
     public function addGoal():void
     {
         $this->countGoal++;
+    }
+
+    public function addFall(string $fall):void
+    {
+        $this->fallList[] = $fall;
     }
 
     public function isPlay(): bool

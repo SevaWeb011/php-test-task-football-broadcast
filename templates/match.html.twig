@@ -112,6 +112,7 @@
                     <th>Имя</th>
                     <th></th>
                     <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -125,10 +126,19 @@
                         </td>
                         <td>
                             {%if player.countGoal > 0%}
-                            {% for i in range(1, player.countGoal)%}
-                            <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/goal.png">
-                            {%endfor%}
+                                {% for i in range(1, player.countGoal)%}
+                                    <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/goal.png">
+                                {%endfor%}
                             {%endif%}
+                        </td>
+                        <td>
+                            {%for fall in player.fallList%}
+                                {% if fall == constant('App\\Entity\\Match::YELLOW_CARD_MESSAGE_TYPE') %}
+                                    <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/card.png">
+                                {% elseif fall == constant('App\\Entity\\Match::RED_CARD_MESSAGE_TYPE') %}
+                                    <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/yellow_red.png">
+                                {% endif %}
+                            {%endfor%}
                         </td>
                         <td>
                             {{ player.playTime }}’
