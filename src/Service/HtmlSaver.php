@@ -23,6 +23,8 @@ class HtmlSaver
     {
         $content =  $this->twig->render('match.html.twig', [
             'match' => $match,
+            'statsTeamHome' => $match->getPositonStatsForTeamHome(),
+            'statsTeamAway' => $match->getPositonStatsForTeamAway(),
             'message' => getenv('MESSAGE') ?? ''
         ]);
 

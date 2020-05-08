@@ -27,6 +27,9 @@ class Match
     private Team $homeTeam;
     private Team $awayTeam;
     private array $messages;
+    private TeamStatistics $positionStatsForTeamHome;
+    private TeamStatistics $positionStatsForTeamAway;
+
 
     public function __construct(string $id, \DateTime $date, string $tournament, Stadium $stadium, Team $homeTeam, Team $awayTeam)
     {
@@ -73,6 +76,33 @@ class Match
     {
         return $this->messages;
     }
+
+    public function getPositonStatsForTeamHome():TeamStatistics
+    {
+        if(!isset($this->positionStatsForTeamHome))
+            throw new \Exeption("field 'positionStatsForTeamHome' not exist");
+        return $this->positionStatsForTeamHome;
+    }
+
+    
+    public function getPositonStatsForTeamAway():TeamStatistics
+    {
+        if(!isset($this->positionStatsForTeamAway))
+            throw new \Exeption("field 'positionStatsForTeamAway' not exist");
+        return $this->positionStatsForTeamAway;
+    }
+
+    public function setPositonStatsForTeamHome(TeamStatistics $stats):void
+    {
+       $this->positionStatsForTeamHome = $stats;
+    }
+
+    
+    public function setPositonStatsForTeamAway(TeamStatistics $stats):void
+    {
+        $this->positionStatsForTeamAway = $stats;
+    }
+    
 
     public function addMessage(string $minute, string $text, string $type): void
     {

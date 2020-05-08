@@ -3,7 +3,8 @@
 namespace App\Service;
 
 use App\Entity\Match;
-use App\Entity\Player;
+use App\Entity\TypePlayer;
+use App\Entity\TeamStatistics;
 use App\Entity\Stadium;
 use App\Entity\Team;
 
@@ -21,6 +22,8 @@ class MatchBuilder
         $awayTeam = $this->buildAwayTeam($event);
         $match = new Match($id, $dateTime, $tournament, $stadium, $homeTeam, $awayTeam);
         $this->processLogs($match, $logs);
+        $this->setHomeTeamStats($homeTeam, $match);
+        $this->setAwayTeamStats($awayTeam, $match);
 
         return $match;
     }
@@ -72,11 +75,26 @@ class MatchBuilder
     {
         $teamInfo = $event['details']["team$teamNumber"];
         $players = [];
+        $typeTeam = $this->getTypeTeam($teamNumber);
         foreach ($teamInfo['players'] as $playerInfo) {
-            $players[] = new Player($playerInfo['number'], $playerInfo['name']);
+            $players[] = new TypePlayer($playerInfo['number'], $playerInfo['name'], $playerInfo['position']);
         }
 
-        return new Team($teamInfo['title'], $teamInfo['country'], $teamInfo['logo'], $players, $teamInfo['coach']);
+        return new Team($teamInfo['title'], $teamInfo['country'], $teamInfo['logo'], $players, $teamInfo['coach'], $typeTeam);
+    }
+
+    private function getTypeTeam(string $teamNumber): string
+    {
+        switch($teamNumber){
+            case "1":
+                return "home";
+                break;
+            case "2":
+                return "away";
+                break;
+            default: 
+                throw new \Exeption("this type team not exist, possible values: 1 or 2");
+        }
     }
 
     private function processLogs(Match $match, array $logs): void
@@ -130,7 +148,6 @@ class MatchBuilder
                                    ->addFall("redCard");
                     break;
             }
-
             $match->addMessage(
                 $this->buildMinuteString($period, $event),
                 $event['description'],
@@ -197,6 +214,18 @@ class MatchBuilder
                 $match->getAwayTeam()->getName()
             )
         );
+    }
+
+    private function setHomeTeamStats(Team $team, Match $match):void
+    {
+        $teamStats = new TeamStatistics($team);
+        $match->setPositonStatsForTeamHome($teamStats);
+    }
+
+    private function setAwayTeamStats(Team $team, Match $match):void
+    {
+        $teamStats = new TeamStatistics($team);
+        $match->setPositonStatsForTeamAway($teamStats);
     }
 
 }
