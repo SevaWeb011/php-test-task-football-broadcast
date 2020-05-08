@@ -52,7 +52,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="card">
                 <div class="card-header">
                     Трансляция
@@ -85,15 +84,16 @@
         </div>
         <div class="col-md-4">
             {% import _self as render %}
-            {{ render.renderTeamInfo(match.homeTeam) }}
-            {{ render.renderTeamInfo(match.awayTeam) }}
+            {%set stats = statsTeamHome%}
+            {{ render.renderTeamInfo(match.homeTeam, stats)}}
+            {%set stats = statsTeamAway%}
+            {{ render.renderTeamInfo(match.awayTeam, stats)}}
         </div>
     </div>
 </div>
 </body>
 </html>
-
-{% macro renderTeamInfo(team) %}
+{% macro renderTeamInfo(team, stats) %}
     <div class="card mb-3">
         <div class="card-header text-center">
             <div>
@@ -126,27 +126,61 @@
                         </td>
                         <td>
                             {%if player.countGoal > 0%}
-                                {% for i in range(1, player.countGoal)%}
-                                    <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/goal.png">
-                                {%endfor%}
+                                <div style = "display: inline-block; white-space: nowrap; ">
+                                    {% for i in range(1, player.countGoal)%}
+                                        <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/goal.png">
+                                    {%endfor%}
+                                </div>
                             {%endif%}
                         </td>
                         <td>
-                            {%for fall in player.fallList%}
-                                {% if fall == constant('App\\Entity\\Match::YELLOW_CARD_MESSAGE_TYPE') %}
-                                    <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/card.png">
-                                {% elseif fall == constant('App\\Entity\\Match::RED_CARD_MESSAGE_TYPE') %}
-                                    <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/yellow_red.png">
-                                {% endif %}
-                            {%endfor%}
+                            <div style = "display: inline-block; white-space: nowrap; ">
+                                {%for fall in player.fallList%}
+                                    {% if fall == constant('App\\Entity\\Match::YELLOW_CARD_MESSAGE_TYPE') %}
+                                        <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/card.png">
+                                    {% elseif fall == constant('App\\Entity\\Match::RED_CARD_MESSAGE_TYPE') %}
+                                        <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/yellow_red.png">
+                                    {% endif %}
+                                {%endfor%}
+                            </div>
                         </td>
                         <td>
                             {{ player.playTime }}’
                         </td>
                     </tr>
-                {% endfor %}
+                    {% endfor %}
                 </tbody>
             </table>
-        </div>
+            <div class="card-body">
+            <table class="table table">
+            
+                <thead>
+                <tr>
+                    <th>Позиция</th>
+                    <th>Время на поле</th>
+ 
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td>Вратарь</td>
+                <td>{{stats.timeGoalkeeper}}%</td>
+                </tr>
+                <tr>
+                <td>Защита</td>
+                <td>{{stats.timeDefenders}}%</td>
+                </tr>
+                <tr>
+                <td>Полузащита</td>
+                <td>{{stats.timeMidfielders}}%</td>
+                </tr>
+                <tr>
+                <td>Нападение</td>
+                <td>{{stats.timeAttackers}}%</td>
+                </tr>
+                </tbody>
+                </table>
+                </div>
     </div>
-{% endmacro %}
+</div>
+ {% endmacro %} 

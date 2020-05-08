@@ -5,20 +5,22 @@ namespace App\Entity;
 class Team
 {
     private string $name;
+    private string $place;
     private string $country;
     private string $logo;
     /**
-     * @var Player[]
+     * @var TypePlayer[]
      */
     private array $players;
     private string $coach;
     private int $goals;
 
-    public function __construct(string $name, string $country, string $logo, array $players, string $coach)
+    public function __construct(string $name, string $country, string $logo, array $players, string $coach, string $place)
     {
         $this->assertCorrectPlayers($players);
 
         $this->name = $name;
+        $this->place = $place; //TODO: validation value
         $this->country = $country;
         $this->logo = $logo;
         $this->players = $players;
@@ -29,6 +31,11 @@ class Team
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getPlace(): string
+    {
+        return $this->place;
     }
 
     public function getCountry(): string
@@ -42,7 +49,7 @@ class Team
     }
 
     /**
-     * @return Player[]
+     * @return TypePlayer[]
      */
     public function getPlayersOnField(): array
     {
@@ -88,7 +95,6 @@ class Team
         return $this->goals;
     }
 
-
     private function assertCorrectPlayers(array $players)
     {
         foreach ($players as $player) {
@@ -96,7 +102,7 @@ class Team
                 throw new \Exception(
                     sprintf(
                         'Player should be instance of "%s". "%s" given.',
-                        Player::class,
+                        TypePlayer::class,
                         get_class($player)
                     )
                 );

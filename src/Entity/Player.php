@@ -11,8 +11,8 @@ class Player
     private string $playStatus;
     private int $inMinute;
     private int $outMinute;
-    private int $countGoal = 0;
-    private array $fallList = [];
+    private int $countGoal;
+    private array $fallList;
 
     public function __construct(int $number, string $name)
     {
@@ -21,6 +21,8 @@ class Player
         $this->playStatus = self::BENCH_PLAY_STATUS;
         $this->inMinute = 0;
         $this->outMinute = 0;
+        $this->countGoal = 0;
+        $this->fallList = [];
     }
 
     public function getNumber(): int
